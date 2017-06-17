@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from pymongo import MongoClient
 from utilities.settings import Settings
-
-collections = ['bases', 'contracts', 'crms', 'finances', 'hrms', 'scms']
+from utilities.stringWorker import StringWorker
 
 
 class DatabaseWorker:
@@ -15,7 +14,7 @@ class DatabaseWorker:
 
     corpus_collection = {
         'COL_BASE': 'bases',
-        'COL_CONTRA': 'contracts',
+        'COL_CONTRACT': 'contracts',
         'COL_CRM': 'crms',
         'COL_FINANCE': 'finances',
         'COL_HRM': 'hrms',
@@ -34,7 +33,7 @@ class DatabaseWorker:
                 DatabaseWorker.isConnected = True
 
     @staticmethod
-    def select_all(table_name):
+    def select_all(table_name, row_id):
         """
         Өгөгдлийн сангийн нэгжээс бүх өгөгдлийг дуудах
         :param table_name: Нэгжийн нэр
@@ -43,13 +42,12 @@ class DatabaseWorker:
         DatabaseWorker.make_connection()
         data = []
         for row in DatabaseWorker.db[table_name].find():
-            data.append((row['q'], table_name[:-1].upper()))
+            data.append((StringWorker.replacer(row[row_id]), table_name[:-1].upper()))
         return data;
 
     @staticmethod
     def select_all_table():
         temp = []
         for i in DatabaseWorker.corpus_collection:
-            temp.extend(DatabaseWorker.select_all(DatabaseWorker.corpus_collection[i]))
-
+            temp.extend(DatabaseWorker.select_all(DatabaseWorker.corpus_collection[i], 'q'))
         return temp

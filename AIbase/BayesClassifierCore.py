@@ -8,6 +8,7 @@ import pickle
 from utilities.fileWorker import FileWorker
 from utilities.databaseWorker import DatabaseWorker
 from utilities.settings import Settings
+from utilities.stringWorker import StringWorker
 
 
 class BayesClassifierCore:
@@ -26,24 +27,30 @@ class BayesClassifierCore:
     filter_vocab = {
         'яаж': True,
         'вэ': True,
-        'вэ?': True,
         'юу': True,
         'гэж': True,
         'хэрхэн': True,
         'хийх': True,
         'үү': True,
-        'үү?': True,
+        'уу': True,
         'рүү': True,
         'руу': True,
         'нь': True,
         'нд': True,
         'н': True,
-        'г': True
+        'г': True,
+        'ын': True,
+        'ийн': True,
+        'ний': True,
+        'ны': True,
+        'и': True,
     }
 
+    @staticmethod
     def save_core(file_name):
         """
-        Сургалтын моделийг файлд хадгалах
+        Сургалтын моделийг файлд хадгална
+        Үгсийн санг өгөгдлийн санд хадгална
         @:param file_name: файлын нэр
         :return:
         """
@@ -51,9 +58,11 @@ class BayesClassifierCore:
         pickle.dump(BayesClassifierCore.classifier, f)
         f.close()
 
+    @staticmethod
     def load_core(file_name):
         """
         Сургалтын моделийг файлаас унших
+        Үгсийн санг өгөгдлийн сангаас унших
         @:param file_name: файлын нэр
         :return:
         """
@@ -61,6 +70,7 @@ class BayesClassifierCore:
         BayesClassifierCore.classifier = pickle.load(f)
         f.close()
 
+    @staticmethod
     def extract_vocubulary(line):
         """
         Өгүүлбэрээс үгсийг ялгаж үгсийн санд утга давхардахгүй хуулах
@@ -94,6 +104,7 @@ class BayesClassifierCore:
     def get_document():
         if Settings.get_corpus_source_type() == 'FILE':
             for line in FileWorker.corpus_extract_line(Settings.get_file_data()):
+                line = BayesClassifierCore.replacer(line)
                 BayesClassifierCore.documents.append((line, 0))
                 BayesClassifierCore.extract_vocubulary(line)
 
@@ -139,6 +150,7 @@ class BayesClassifierCore:
         return BayesClassifierCore.classifier.show_most_informative_features(25)
         # print(NaiveBayesImp.show_most_informative_features(feature))
 
+    @staticmethod
     def classify_detail(text):
         """
         Текстийг ангилах - Дэлгэрэгүй: Ангилал бүрийн магадлал
@@ -151,6 +163,7 @@ class BayesClassifierCore:
         print("CONTRACT", dist.prob("CONTRACT"))
         print("CRM", dist.prob("CRM"))
 
+    @staticmethod
     def classify(text):
         """
         Текстийг ангилах
@@ -159,6 +172,38 @@ class BayesClassifierCore:
         feature_test = {i: (i in word_tokenize(text.lower())) for i in BayesClassifierCore.vocabulary}
         return BayesClassifierCore.classifier.classify(feature_test)
 
+    @staticmethod
+    def validateData(text):
+        print("len:",len(BayesClassifierCore.vocabulary))
+
+        for k in word_tokenize(text.lower()):
+            print("|"+k+"|")
+            for j in BayesClassifierCore.vocabulary:
+                if k == j:
+                    print("Match: ",j)
+
 BayesClassifierCore.process()
-test = str('бүртгэх боломжтой ажилладаг')
-print(BayesClassifierCore.classify(test))
+print(BayesClassifierCore.vocabulary)
+# BayesClassifierCore.load_core(Settings.get_model_file())
+test = 'үйлчилгээний нөхцөл гэрээ бүртгэх'
+BayesClassifierCore.validateData(test)
+print(test)
+BayesClassifierCore.classifier.show_most_informative_features(25)
+kechi = BayesClassifierCore.classify(test)
+BayesClassifierCore.classify_detail(test)
+print(kechi)
+# data = DatabaseWorker.select_all(kechi.lower()+'s', 'a')
+#
+# max = 0
+# max_str = ''
+#
+# for i in data:
+#     result = StringWorker.str_compare(test, i[0])
+#     if result > 90:
+#         max_str = i[0]
+#         break
+#     if result > max:
+#         max = result
+#         max_str = i[0]
+#
+# print('FINAL ANSWER: ',max_str)

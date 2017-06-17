@@ -100,3 +100,12 @@ class Settings:
         """
         Settings.read_settings()
         return Settings.SETTINGS['learning_schedule']['frequency']['time']
+
+    @staticmethod
+    def get_model_file():
+        """
+        Сургалтын моделийг дахин сургах хугацааг авах
+        :return:
+        """
+        Settings.read_settings()
+        return Settings.SETTINGS['learning_schedule']['model_filename']
