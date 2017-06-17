@@ -15,7 +15,7 @@ class BayesClassifierCore:
     """
     Bayes -н ангилагчийг хэрэгжүүлсэн
     """
-    documents = None  # Сургалтын өгөгдлүүд
+    documents = []  # Сургалтын өгөгдлүүд
     classifier = None  # Bayes ангилагч обьект
     vocabulary = set()  # Үгсийн сан
     counter = 0
@@ -27,6 +27,7 @@ class BayesClassifierCore:
     filter_vocab = {
         'яаж': True,
         'вэ': True,
+        'бэ': True,
         'юу': True,
         'гэж': True,
         'хэрхэн': True,
@@ -38,12 +39,19 @@ class BayesClassifierCore:
         'нь': True,
         'нд': True,
         'н': True,
+        'аа': True,
         'г': True,
+        'ийг': True,
+        'ыг': True,
         'ын': True,
         'ийн': True,
         'ний': True,
         'ны': True,
-        'и': True
+        'и': True,
+        'д': True,
+        'т': True,
+        'тэй': True,
+        'тай': True
     }
 
     @staticmethod
@@ -57,6 +65,8 @@ class BayesClassifierCore:
         f = open(file_name+'.pickle', 'wb')
         pickle.dump(BayesClassifierCore.classifier, f)
         f.close()
+        for word in BayesClassifierCore.vocabulary:
+            print(DatabaseWorker.insert_vocabulary(word))
 
     @staticmethod
     def load_core(file_name):
@@ -69,6 +79,7 @@ class BayesClassifierCore:
         f = open(file_name+'.pickle', 'rb')
         BayesClassifierCore.classifier = pickle.load(f)
         f.close()
+        BayesClassifierCore.vocabulary = set(DatabaseWorker.get_vocabulary())
 
     @staticmethod
     def extract_vocubulary(line):
@@ -104,7 +115,7 @@ class BayesClassifierCore:
     def get_document():
         if Settings.get_corpus_source_type() == 'FILE':
             for line in FileWorker.corpus_extract_line(Settings.get_file_data()):
-                line = BayesClassifierCore.replacer(line)
+                line = StringWorker.replacer(line)
                 BayesClassifierCore.documents.append((line, 0))
                 BayesClassifierCore.extract_vocubulary(line)
 
@@ -174,36 +185,39 @@ class BayesClassifierCore:
 
     @staticmethod
     def validateData(text):
+        """
+        Үгсийн санд байгаа эсэхийг шалгах
+        :param text: Шалгах текст
+        :return:
+        """
         print("len:",len(BayesClassifierCore.vocabulary))
-
         for k in word_tokenize(text.lower()):
-            print("|"+k+"|")
             for j in BayesClassifierCore.vocabulary:
                 if k == j:
-                    print("Match: ",j)
+                    print("Match: ", j)
 
-BayesClassifierCore.process()
-print(BayesClassifierCore.vocabulary)
-# BayesClassifierCore.load_core(Settings.get_model_file())
-test = 'үйлчилгээний нөхцөл гэрээ бүртгэх'
+# BayesClassifierCore.process()
+# BayesClassifierCore.save_core(Settings.get_model_file())
+BayesClassifierCore.load_core(Settings.get_model_file())
+test = 'ямар үйлдэл систем дээр ажилладаг вэ'
 BayesClassifierCore.validateData(test)
 print(test)
-BayesClassifierCore.classifier.show_most_informative_features(25)
 kechi = BayesClassifierCore.classify(test)
 BayesClassifierCore.classify_detail(test)
 print(kechi)
-# data = DatabaseWorker.select_all(kechi.lower()+'s', 'a')
-#
-# max = 0
-# max_str = ''
-#
-# for i in data:
-#     result = StringWorker.str_compare(test, i[0])
-#     if result > 90:
-#         max_str = i[0]
-#         break
-#     if result > max:
-#         max = result
-#         max_str = i[0]
-#
-# print('FINAL ANSWER: ',max_str)
+data = DatabaseWorker.select_all(kechi.lower()+'s', 'a', 'A')
+
+max = 0
+max_str = ''
+print("RAW: ", test)
+
+for i in data:
+    # print(i)
+    result = StringWorker.str_compare(test, i)
+    if result > 50:
+        print(i, "||", result)
+    if result > max:
+        max = result
+        max_str = i
+
+print('FINAL ANSWER: ', max_str, '||', max)

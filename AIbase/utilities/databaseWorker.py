@@ -33,21 +33,45 @@ class DatabaseWorker:
                 DatabaseWorker.isConnected = True
 
     @staticmethod
-    def select_all(table_name, row_id):
+    def select_all(table_name, row_id, type):
         """
         Өгөгдлийн сангийн нэгжээс бүх өгөгдлийг дуудах
         :param table_name: Нэгжийн нэр
+        :param type: Q/A Асуулт эсвэл Хариулт унших
         :return: list утга буцаана
         """
         DatabaseWorker.make_connection()
         data = []
         for row in DatabaseWorker.db[table_name].find():
-            data.append((StringWorker.replacer(row[row_id]), table_name[:-1].upper()))
-        return data;
+            if type == 'Q':
+                data.append((StringWorker.replacer(row[row_id]), table_name[:-1].upper()))
+            elif type == 'A':
+                data.append(row[row_id])
+        return data
 
     @staticmethod
     def select_all_table():
         temp = []
         for i in DatabaseWorker.corpus_collection:
-            temp.extend(DatabaseWorker.select_all(DatabaseWorker.corpus_collection[i], 'q'))
+            temp.extend(DatabaseWorker.select_all((DatabaseWorker.corpus_collection[i]), 'q', 'Q'))
         return temp
+
+    @staticmethod
+    def insert_vocabulary(text):
+        DatabaseWorker.make_connection()
+        result = DatabaseWorker.db.vocubularys.insert_one(
+            {
+                "word": text
+            }
+        )
+        return result
+
+    @staticmethod
+    def get_vocabulary():
+        DatabaseWorker.make_connection()
+        return DatabaseWorker.select_all('vocubularys', 'word', 'A')
+
+    @staticmethod
+    def set_empty_vocabuary():
+        DatabaseWorker.db.vocubularys.remove({})
+        return

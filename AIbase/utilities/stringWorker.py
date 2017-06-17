@@ -91,7 +91,6 @@ class StringWorker:
         :return: Төстэй байх магадлалыг илгээнэ
         """
         s1len = len(s1.split())
-        print(s1)
         similarity1 = 100 - StringWorker.levenshtein_distance(s1, s2) * 100 / len(s1)
         similarity2 = 100 - StringWorker.word_changes(s1, s2, True) * 100 / s1len
         similarity3 = 100 - ((abs(len(s1) - len(s2))) * 100) / len(s1)
@@ -100,6 +99,11 @@ class StringWorker:
 
     @staticmethod
     def replacer(line):
+        """
+        Тэмдэгтүүдийг хоосон зайгаар солих
+        :param line:
+        :return:
+        """
         for e in range(0, len(line)):
             if line[e] == '-' or line[e] == '!' or line[e] == '?' or line[e] == '.' or line[e] == ',':
                 line = line[:e] + " " + line[e+1:]
