@@ -1,7 +1,6 @@
 from utilities.fileWorker import FileWorker
 
 
-
 class Settings:
     """
     Үндсэн тохиргооны файлаас тохиргоог унших get функцуудыг агуулсан
@@ -31,6 +30,26 @@ class Settings:
             return 'DATABASE'
         else:
             return 'FILE'
+
+    @staticmethod
+    def get_db_engine():
+        Settings.read_settings()
+        return Settings.SETTINGS['corpus_source']['database']['engine']
+
+    @staticmethod
+    def get_db_host():
+        Settings.read_settings()
+        return Settings.SETTINGS['corpus_source']['database']['host']
+
+    @staticmethod
+    def get_db_port():
+        Settings.read_settings()
+        return Settings.SETTINGS['corpus_source']['database']['port']
+
+    @staticmethod
+    def get_db_name():
+        Settings.read_settings()
+        return Settings.SETTINGS['corpus_source']['database']['dbname']
 
     @staticmethod
     def get_file_meta():

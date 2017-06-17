@@ -1,15 +1,15 @@
 {
   "corpus_source":{
-    "_comment": "fileOrDatabase : True (DB-с унших), False (Файлаас унших)",
+    "_comment": "fileOrDatabase : true (DB-с унших), false (Файлаас унших)",
 
-    "file_or_database": false,
+    "file_or_database": true,
     "database": {
-      "engine": "mongoDB",
-      "username": "root",
-      "passowrd": "pass",
-      "dbname": "name",
-      "host" : "127.0.0.1",
-      "port" : 80
+      "engine": "mongodb",
+      "username": "admin",
+      "passowrd": "admin",
+      "dbname": "erp",
+      "host" : "172.16.234.92",
+      "port" : 27017
     },
     "file": {
       "data_location" : "case.data",

@@ -6,7 +6,9 @@ import time
 from nltk.tokenize import word_tokenize
 import pickle
 from utilities.fileWorker import FileWorker
+from utilities.databaseWorker import DatabaseWorker
 from utilities.settings import Settings
+
 
 class BayesClassifierCore:
     """
@@ -20,6 +22,7 @@ class BayesClassifierCore:
     pos = 0 # Сургалтын тестийг амжилттай давсан
     neg = 0 # Сургалтын тестийг амжилтгүй давсан
 
+    # Feature -т тооцохгүй үгс
     filter_vocab = {
         'яаж': True,
         'вэ': True,
@@ -29,7 +32,13 @@ class BayesClassifierCore:
         'хэрхэн': True,
         'хийх': True,
         'үү': True,
-        'үү?': True
+        'үү?': True,
+        'рүү': True,
+        'руу': True,
+        'нь': True,
+        'нд': True,
+        'н': True,
+        'г': True
     }
 
     def save_core(file_name):
@@ -60,8 +69,11 @@ class BayesClassifierCore:
         """
         line = line.lower()
         for s in line.split():
-            temp = s.lower()
-            BayesClassifierCore.vocabulary.add(temp)
+            try:
+                if BayesClassifierCore.filter_vocab[s] is True:
+                    continue
+            except KeyError:
+                BayesClassifierCore.vocabulary.add(s)
 
     def merge_meta_file(document, metafile):
         """
@@ -79,24 +91,28 @@ class BayesClassifierCore:
         return temp
 
     @staticmethod
-    def process():
-        """
-        dwa
-        :return:
-        """
-        start_time = time.time()
-        BayesClassifierCore.documents = []
-
+    def get_document():
         if Settings.get_corpus_source_type() == 'FILE':
             for line in FileWorker.corpus_extract_line(Settings.get_file_data()):
                 BayesClassifierCore.documents.append((line, 0))
                 BayesClassifierCore.extract_vocubulary(line)
 
             BayesClassifierCore.documents = BayesClassifierCore.merge_meta_file(BayesClassifierCore.documents,
-                                                                                    Settings.get_file_meta())
-        print("****************************")
-        print(BayesClassifierCore.documents)
-        print("****************************")
+                                                                                Settings.get_file_meta())
+        elif Settings.get_corpus_source_type() == 'DATABASE':
+            BayesClassifierCore.documents = DatabaseWorker.select_all_table()
+            for line in BayesClassifierCore.documents:
+                BayesClassifierCore.extract_vocubulary(line[0])
+
+    @staticmethod
+    def process():
+        """
+        Үсийн хусдаг метход
+        :return:
+        """
+        start_time = time.time()
+        BayesClassifierCore.get_document()
+
         featuresets = [({i: (i in word_tokenize(sentence.lower()))
                         for i in BayesClassifierCore.vocabulary}, tag) for sentence, tag in BayesClassifierCore.documents]
 
@@ -135,6 +151,14 @@ class BayesClassifierCore:
         print("CONTRACT", dist.prob("CONTRACT"))
         print("CRM", dist.prob("CRM"))
 
+    def classify(text):
+        """
+        Текстийг ангилах
+        :return: Харгалзах ангилалыг буцаана
+        """
+        feature_test = {i: (i in word_tokenize(text.lower())) for i in BayesClassifierCore.vocabulary}
+        return BayesClassifierCore.classifier.classify(feature_test)
+
 BayesClassifierCore.process()
 test = str('бүртгэх боломжтой ажилладаг')
-BayesClassifierCore.classify_detail(test)
+print(BayesClassifierCore.classify(test))

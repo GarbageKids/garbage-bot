@@ -2,6 +2,13 @@ class StringWorker:
 
     @staticmethod
     def min(a, b, c):
+        """
+        3 тооны хамгийн бага утга
+        :param a:
+        :param b:
+        :param c:
+        :return:
+        """
         if a < b:
             if a < c:
                 return a
@@ -15,6 +22,12 @@ class StringWorker:
 
     @staticmethod
     def levenshtein_distance(s1, s2):
+        """
+        Levenshtein алгоритм; Доороос дээш (bottom-up) динамик програмчлал
+        :param s1: Текст1
+        :param s2: Текст2
+        :return:
+        """
         s1len = len(s1) + 1
         s2len = len(s2) + 1
         dp = [[0 for x in range(s1len)] for y in range(s2len)]
@@ -37,6 +50,13 @@ class StringWorker:
 
     @staticmethod
     def word_changes(s1, s2, complex):
+        """
+        Үгс хоорондын зөрүүг тооцох
+        :param s1: Текст1
+        :param s2: Текст2
+        :param complex: Үгсийг шалгахдаа Levenshtein ий алгоритм ашиглах эсэх
+        :return: ялгаатай үгсийн тоо
+        """
         threshold = 50
         diff = 0
         s1w = s1.split()
@@ -63,8 +83,13 @@ class StringWorker:
 
     @staticmethod
     def str_compare(s1, s2):
+        """
+        Өгүүлбэрийг хооронд нь харьцуулах
+        :param s1: Текст1
+        :param s2: Текст2
+        :return: Төстэй байх магадлалыг илгээнэ
+        """
         s1len = len(s1.split())
-
         similarity1 = 100 - StringWorker.levenshtein_distance(s1, s2) * 100 / len(s1)
         similarity2 = 100 - StringWorker.word_changes(s1, s2, True) * 100 / s1len
         similarity3 = 100 - ((abs(len(s1) - len(s2))) * 100) / len(s1)
