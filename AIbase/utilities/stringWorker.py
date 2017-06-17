@@ -93,9 +93,10 @@ class StringWorker:
         s1len = len(s1.split())
         similarity1 = 100 - StringWorker.levenshtein_distance(s1, s2) * 100 / len(s1)
         similarity2 = 100 - StringWorker.word_changes(s1, s2, True) * 100 / s1len
-        similarity3 = 100 - ((abs(len(s1) - len(s2))) * 100) / len(s1)
-        similarity4 = 100 - ((abs(s1len - len(s2.split()))) * 100) / s1len
-        return (similarity1 + similarity2 * 2 + similarity3 + similarity4) / 5
+        # similarity3 = 100 - ((abs(len(s1) - len(s2))) * 100) / len(s1)
+        # similarity4 = 100 - ((abs(s1len - len(s2.split()))) * 100) / s1len
+        # return (similarity1 + similarity2 * 2 + similarity3 + similarity4) / 5
+        return (similarity1 + similarity2 * 3) / 4
 
     @staticmethod
     def replacer(line):

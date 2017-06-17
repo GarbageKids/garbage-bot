@@ -47,6 +47,8 @@ class DatabaseWorker:
                 data.append((StringWorker.replacer(row[row_id]), table_name[:-1].upper()))
             elif type == 'A':
                 data.append(row[row_id])
+            elif type == 'QA':
+                data.append((row['q'], row['a']))
         return data
 
     @staticmethod
@@ -72,6 +74,6 @@ class DatabaseWorker:
         return DatabaseWorker.select_all('vocubularys', 'word', 'A')
 
     @staticmethod
-    def set_empty_vocabuary():
+    def set_empty_vocabulary():
         DatabaseWorker.db.vocubularys.remove({})
         return

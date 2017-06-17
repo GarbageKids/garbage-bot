@@ -17,16 +17,14 @@
     }
   },
 
-  "learning_schedule": {
-    "location": "/home/lupino/GHTWXADWA/",
+  "learning": {
     "model_filename": "garbageKidsDemo",
-    "frequency": {
-      "_comment": "7 ХОНОГ БҮР эсвэл САР БҮР сонгосон тохиолдолд тухайн мөчлөгийн хамгийн эхний өдрийн цагаар ажиллана",
+  },
 
-      "daily": true,
-      "weekly": false,
-      "monthly": false,
-      "time": "23:59"
-    }
+  "receiver":{
+    "url": "http://172.16.234.92/receiver",
+    "format": "json",
+    "method": "POST"
   }
+
 }

@@ -30,7 +30,6 @@ class BayesClassifierCore:
         'бэ': True,
         'юу': True,
         'гэж': True,
-        'хэрхэн': True,
         'хийх': True,
         'үү': True,
         'уу': True,
@@ -65,8 +64,9 @@ class BayesClassifierCore:
         f = open(file_name+'.pickle', 'wb')
         pickle.dump(BayesClassifierCore.classifier, f)
         f.close()
+        DatabaseWorker.set_empty_vocabulary()
         for word in BayesClassifierCore.vocabulary:
-            print(DatabaseWorker.insert_vocabulary(word))
+            DatabaseWorker.insert_vocabulary(word)
 
     @staticmethod
     def load_core(file_name):
@@ -135,8 +135,14 @@ class BayesClassifierCore:
         start_time = time.time()
         BayesClassifierCore.get_document()
 
+        multiply_len = len(BayesClassifierCore.documents)
+        for i in range(0, 2):
+            for e in range(0, multiply_len):
+                BayesClassifierCore.documents.append(BayesClassifierCore.documents[e])
+
         featuresets = [({i: (i in word_tokenize(sentence.lower()))
                         for i in BayesClassifierCore.vocabulary}, tag) for sentence, tag in BayesClassifierCore.documents]
+
 
         size = int(len(featuresets))
 
@@ -158,8 +164,7 @@ class BayesClassifierCore:
         print("-Нарийвчлал-end-\n")
         end_time = time.time()
         print("Хугацаа: " + str(end_time - start_time) + "\n")
-        return BayesClassifierCore.classifier.show_most_informative_features(25)
-        # print(NaiveBayesImp.show_most_informative_features(feature))
+        BayesClassifierCore.classifier.show_most_informative_features(25)
 
     @staticmethod
     def classify_detail(text):
@@ -167,12 +172,14 @@ class BayesClassifierCore:
         Текстийг ангилах - Дэлгэрэгүй: Ангилал бүрийн магадлал
         :return:
         """
+        temp = {}
         feature_test = {i: (i in word_tokenize(text.lower())) for i in BayesClassifierCore.vocabulary}
         dist = BayesClassifierCore.classifier.prob_classify(feature_test)
-        print("BASE", dist.prob("BASE"))
-        print("SCM", dist.prob("SCM"))
-        print("CONTRACT", dist.prob("CONTRACT"))
-        print("CRM", dist.prob("CRM"))
+        temp.update({'BASE':dist.prob("BASE")})
+        temp.update({'SCM': dist.prob("SCM")})
+        temp.update({'CONTRACT': dist.prob("CONTRACT")})
+        temp.update({'CRM': dist.prob("CRM")})
+        return temp
 
     @staticmethod
     def classify(text):
@@ -196,28 +203,35 @@ class BayesClassifierCore:
                 if k == j:
                     print("Match: ", j)
 
-# BayesClassifierCore.process()
-# BayesClassifierCore.save_core(Settings.get_model_file())
-BayesClassifierCore.load_core(Settings.get_model_file())
-test = 'ямар үйлдэл систем дээр ажилладаг вэ'
-BayesClassifierCore.validateData(test)
-print(test)
-kechi = BayesClassifierCore.classify(test)
-BayesClassifierCore.classify_detail(test)
-print(kechi)
-data = DatabaseWorker.select_all(kechi.lower()+'s', 'a', 'A')
+BayesClassifierCore.process()
+BayesClassifierCore.save_core(Settings.get_model_file())
 
-max = 0
-max_str = ''
-print("RAW: ", test)
-
-for i in data:
-    # print(i)
-    result = StringWorker.str_compare(test, i)
-    if result > 50:
-        print(i, "||", result)
-    if result > max:
-        max = result
-        max_str = i
-
-print('FINAL ANSWER: ', max_str, '||', max)
+# BayesClassifierCore.load_core(Settings.get_model_file())
+# test = 'гэрээ хэрхэн үүсгэх вэ'
+# print(test)
+# kechi = BayesClassifierCore.classify_detail(test)
+# print(kechi)
+# max = 0
+# max_str = None
+# for i in kechi:
+#     isKnow = False
+#     print(i, kechi[i])
+#     if kechi[i] > max:
+#         max = kechi[i]
+#         max_str = i
+# if max < 0.55:
+#     print("Уучлаарай. Асуултанд хариулахад миний мэдлэг хүрэлцэхгүй байна")
+# else:
+#     data = DatabaseWorker.select_all(kechi.lower()+'s', 'a', 'QA')
+#
+#     max = 0
+#     max_str = ''
+#     print("RAW: ", test)
+#
+#     for i in data:
+#         result = StringWorker.str_compare(test, i[0])
+#         if result > max:
+#             max = result
+#             max_str = i[1]
+#
+#     print('FINAL ANSWER: ', max_str, '||', max)
