@@ -1,0 +1,6 @@
+{
+	"messenger_uri": "https://graph.facebook.com/v2.6/me/messages",
+	"app_secret": "a08d2b26023164b6ca399ef7a97aa688",
+	"page_access_token": "EAADLkEPkylsBAEtTALxa0GSpZBIP6HOKDhOtYn9XUfqSQaDYhcJ8Mn916COmrPxUeLaK8d5OCQ4iWqux7at6WBdGi3Azfk1Dc1u5UnFuoz9vLRfjoP5khdYd9barsyN7H18nc6XqOrAnRK6VsZBQFZCdQMVld9AOn0XoWrqHgZDZD",
+	"validation_token": "ubhackathon"
+}
