@@ -46,7 +46,6 @@ class StringWorker:
                     c = 1
                 dp[e][i] = min(dp[e-1][i]+1, dp[e][i-1]+1, dp[e-1][i-1]+c)
 
-
         return dp[s1len-2][s2len-2]
 
     @staticmethod
@@ -69,7 +68,7 @@ class StringWorker:
             exist = False
             for e in range(0, s2len):
                 if complex is True:
-                    if StringWorker.levenshtein_distance(s1w[i], s2w[e]) < threshold:
+                    if ((StringWorker.levenshtein_distance(s1w[i], s2w[e])*100) / s1len) < threshold:
                         exist = True
                         break
                 else:
@@ -83,6 +82,23 @@ class StringWorker:
         return diff
 
     @staticmethod
+    def word_similarity(s1, s2):
+        s1 = s1.lower()
+        s2 = s2.lower()
+        s1len = len(s1)
+        s2len = len(s2)
+        max = 0
+        if s1len > s2len:
+            max = s1len
+        else:
+            max = s2len
+        if (StringWorker.levenshtein_distance(s1, s2) * 100)/max < 20:
+            print("SIM: ", s1, s2)
+            return True
+        else:
+            return False
+
+    @staticmethod
     def str_compare(s1, s2):
         """
         Өгүүлбэрийг хооронд нь харьцуулах
@@ -91,12 +107,12 @@ class StringWorker:
         :return: Төстэй байх магадлалыг илгээнэ
         """
         s1len = len(s1.split())
-        similarity1 = 100 - StringWorker.levenshtein_distance(s1, s2) * 100 / len(s1)
+        # similarity1 = 100 - StringWorker.levenshtein_distance(s1, s2) * 100 / len(s1)
         similarity2 = 100 - StringWorker.word_changes(s1, s2, True) * 100 / s1len
         # similarity3 = 100 - ((abs(len(s1) - len(s2))) * 100) / len(s1)
         # similarity4 = 100 - ((abs(s1len - len(s2.split()))) * 100) / s1len
         # return (similarity1 + similarity2 * 2 + similarity3 + similarity4) / 5
-        return (similarity1 + similarity2 * 3) / 4
+        return similarity2
 
     @staticmethod
     def replacer(line):

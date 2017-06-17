@@ -109,3 +109,19 @@ class Settings:
         """
         Settings.read_settings()
         return Settings.SETTINGS['receiver']['url']
+
+    @staticmethod
+    def get_default_unknown_text():
+        """
+        :return: Чат хүлээн авах хаяг
+        """
+        Settings.read_settings()
+        return Settings.SETTINGS['defaults']['unknown_text']
+
+    @staticmethod
+    def get_learn_validation_token():
+        """
+        :return:
+        """
+        Settings.read_settings()
+        return Settings.SETTINGS['learning']['learn_validation_token']

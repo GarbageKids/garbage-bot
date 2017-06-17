@@ -18,7 +18,7 @@ class BayesClassifierCore:
     documents = []  # Сургалтын өгөгдлүүд
     classifier = None  # Bayes ангилагч обьект
     vocabulary = set()  # Үгсийн сан
-    counter = 0
+    isModelLoaded = False
 
     pos = 0 # Сургалтын тестийг амжилттай давсан
     neg = 0 # Сургалтын тестийг амжилтгүй давсан
@@ -76,10 +76,14 @@ class BayesClassifierCore:
         @:param file_name: файлын нэр
         :return:
         """
+        if BayesClassifierCore.isModelLoaded is True:
+            return
+
         f = open(file_name+'.pickle', 'rb')
         BayesClassifierCore.classifier = pickle.load(f)
         f.close()
         BayesClassifierCore.vocabulary = set(DatabaseWorker.get_vocabulary())
+        BayesClassifierCore.isModelLoaded = True
 
     @staticmethod
     def extract_vocubulary(line):
@@ -173,9 +177,28 @@ class BayesClassifierCore:
         :return:
         """
         temp = {}
-        feature_test = {i: (i in word_tokenize(text.lower())) for i in BayesClassifierCore.vocabulary}
+        temp2 = []
+        print(text)
+        words = text.split()
+        lenn = len(words)
+
+        for word in words:
+            try:
+                if BayesClassifierCore.filter_vocab[word] is True:
+                    continue
+            except KeyError:
+                temp2.append(word)
+
+        words = temp2
+        del temp2
+
+        print(words)
+        feature_test = {i: (i in word_tokenize(k)) for k in words for i in BayesClassifierCore.vocabulary}
+        # feature_test = {i: (StringWorker.word_similarity(k, i)) for k in words for i in BayesClassifierCore.vocabulary}
+        print(feature_test)
+
         dist = BayesClassifierCore.classifier.prob_classify(feature_test)
-        temp.update({'BASE':dist.prob("BASE")})
+        temp.update({'BASE': dist.prob("BASE")})
         temp.update({'SCM': dist.prob("SCM")})
         temp.update({'CONTRACT': dist.prob("CONTRACT")})
         temp.update({'CRM': dist.prob("CRM")})
@@ -191,7 +214,7 @@ class BayesClassifierCore:
         return BayesClassifierCore.classifier.classify(feature_test)
 
     @staticmethod
-    def validateData(text):
+    def validate_data(text):
         """
         Үгсийн санд байгаа эсэхийг шалгах
         :param text: Шалгах текст
@@ -203,35 +226,37 @@ class BayesClassifierCore:
                 if k == j:
                     print("Match: ", j)
 
-BayesClassifierCore.process()
-BayesClassifierCore.save_core(Settings.get_model_file())
+    @staticmethod
+    def answer(text):
+        """
+        Хариултыг боловсруулах
+        :param text: Асуулт
+        :return: Хариулт
+        """
+        text = StringWorker.replacer(text.lower())
+        BayesClassifierCore.load_core(Settings.get_model_file())
+        results = BayesClassifierCore.classify_detail(text)
+        max_prob = 0
+        max_prob_str = None
+        answer = None
+        for i in results:
+            if results[i] > max_prob:
+                max_prob = results[i]
+                max_prob_str = i
+        print(max_prob, max_prob_str)
+        if max_prob < 0.35:
+            answer = Settings.get_default_unknown_text()
+        else:
+            data = DatabaseWorker.select_all(max_prob_str.lower() + 's', 'a', 'QA')
+            max_similarity = 0
+            for i in data:
+                result = StringWorker.str_compare(text, i[0])
+                if result > max_similarity:
+                    max_similarity = result
+                    answer = i[1]
 
-# BayesClassifierCore.load_core(Settings.get_model_file())
-# test = 'гэрээ хэрхэн үүсгэх вэ'
-# print(test)
-# kechi = BayesClassifierCore.classify_detail(test)
-# print(kechi)
-# max = 0
-# max_str = None
-# for i in kechi:
-#     isKnow = False
-#     print(i, kechi[i])
-#     if kechi[i] > max:
-#         max = kechi[i]
-#         max_str = i
-# if max < 0.55:
-#     print("Уучлаарай. Асуултанд хариулахад миний мэдлэг хүрэлцэхгүй байна")
-# else:
-#     data = DatabaseWorker.select_all(kechi.lower()+'s', 'a', 'QA')
-#
-#     max = 0
-#     max_str = ''
-#     print("RAW: ", test)
-#
-#     for i in data:
-#         result = StringWorker.str_compare(test, i[0])
-#         if result > max:
-#             max = result
-#             max_str = i[1]
-#
-#     print('FINAL ANSWER: ', max_str, '||', max)
+        print(answer)
+        return answer
+
+# BayesClassifierCore.process()
+# BayesClassifierCore.save_core(Settings.get_model_file())

@@ -19,12 +19,16 @@
 
   "learning": {
     "model_filename": "garbageKidsDemo",
+    "learn_validation_token": "GHTWXADWA"
   },
 
-  "receiver":{
+  "receiver": {
     "url": "http://172.16.234.92/receiver",
     "format": "json",
     "method": "POST"
-  }
+  },
 
+  "defaults": {
+    "unknown_text": "Уучлаарай. Асуултанд хариулахад миний мэдлэг хүрэлцэхгүй байна"
+  }
 }
