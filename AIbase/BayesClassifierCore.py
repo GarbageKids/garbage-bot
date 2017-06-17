@@ -9,53 +9,66 @@ from utilities.fileWorker import FileWorker
 from utilities.settings import Settings
 
 class BayesClassifierCore:
+    """
+    Bayes -н ангилагчийг хэрэгжүүлсэн
+    """
     documents = None  # Сургалтын өгөгдлүүд
     classifier = None  # Bayes ангилагч обьект
     vocabulary = set()  # Үгсийн сан
     counter = 0
 
-    all = 0
-    pos = 0
-    neg = 0
+    pos = 0 # Сургалтын тестийг амжилттай давсан
+    neg = 0 # Сургалтын тестийг амжилтгүй давсан
+
+    filter_vocab = {
+        'яаж': True,
+        'вэ': True,
+        'вэ?': True,
+        'юу': True,
+        'гэж': True,
+        'хэрхэн': True,
+        'хийх': True,
+        'үү': True,
+        'үү?': True
+    }
 
     def save_core(file_name):
-        '''
+        """
         Сургалтын моделийг файлд хадгалах
         @:param file_name: файлын нэр
         :return:
-        '''
+        """
         f = open(file_name+'.pickle', 'wb')
         pickle.dump(BayesClassifierCore.classifier, f)
         f.close()
 
     def load_core(file_name):
-        '''
+        """
         Сургалтын моделийг файлаас унших
         @:param file_name: файлын нэр
         :return:
-        '''
+        """
         f = open(file_name+'.pickle', 'rb')
         BayesClassifierCore.classifier = pickle.load(f)
         f.close()
 
-
     def extract_vocubulary(line):
-        '''
+        """
         Өгүүлбэрээс үгсийг ялгаж үгсийн санд утга давхардахгүй хуулах
         @:param line: Өгүүлбэр
         :return:
-        '''
+        """
         line = line.lower()
         for s in line.split():
             temp = s.lower()
             BayesClassifierCore.vocabulary.add(temp)
 
     def merge_meta_file(document, metafile):
-        '''
+        """
         Файлаас унших үед текст өгөгдлийг харгалзах ангилалтай нь нэгтгэх
         :param metafile:
         :return:
-        '''
+        """
         temp = []
         dt = FileWorker.corpus_extract_line(metafile)
         i = 0
@@ -67,6 +80,10 @@ class BayesClassifierCore:
 
     @staticmethod
     def process():
+        """
+        dwa
+        :return:
+        """
         start_time = time.time()
         BayesClassifierCore.documents = []
 
@@ -106,20 +123,17 @@ class BayesClassifierCore:
         return BayesClassifierCore.classifier.show_most_informative_features(25)
         # print(NaiveBayesImp.show_most_informative_features(feature))
 
-
     def classify_detail(text):
-        '''
+        """
         Текстийг ангилах - Дэлгэрэгүй: Ангилал бүрийн магадлал
         :return:
-        '''
+        """
         feature_test = {i: (i in word_tokenize(text.lower())) for i in BayesClassifierCore.vocabulary}
         dist = BayesClassifierCore.classifier.prob_classify(feature_test)
         print("BASE", dist.prob("BASE"))
         print("SCM", dist.prob("SCM"))
         print("CONTRACT", dist.prob("CONTRACT"))
         print("CRM", dist.prob("CRM"))
-
-
 
 BayesClassifierCore.process()
 test = str('бүртгэх боломжтой ажилладаг')
