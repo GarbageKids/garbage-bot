@@ -43,7 +43,7 @@ class BayesClassifierCore:
         'ийн': True,
         'ний': True,
         'ны': True,
-        'и': True,
+        'и': True
     }
 
     @staticmethod
