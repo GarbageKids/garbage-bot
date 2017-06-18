@@ -1,10 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>Document</title>
+    <meta charset="UTF-8">
+    <title>Garbage Kids</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/animate.min.css">
+    <link rel="stylesheet" href="/static/css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.7.0/css/perfect-scrollbar.min.css">
 </head>
-<body>
-	<h1>Hello World</h1>
+
+<body ng-app="green_bot">
+    <script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: "223820474796635",
+            xfbml: true,
+            version: "v2.6"
+        });
+
+    };
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <div class="wrapper" ng-controller="ChatCtrl">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">Garbage Kids</div>
+            <div class="menu">
+            </div>
+        </div>
+        <!-- END / HEADER -->
+        <!-- CONTENT -->
+        <div class="content animated fadeInRight">
+            <div class="chat">
+                <div class="chat-title">
+                    <h1><i class="fa fa-user-secret"></i> Garbage Bod</h1>
+                    <div class="fb-messengermessageus f_right" messenger_app_id="223820474796635" page_id="119412145321314" color="blue" size="large">
+                    </div>
+                </div>
+                <div class="chat-body">
+                    <div ng-repeat="m in chat">
+                        <span class="title" ng-class="m.bot == 1 ? 'bot' : 'user'">{{m.name}}</span>
+                        <div class="message animated fadeIn" ng-class="m.bot == 1 ? 'from' : 'my'">
+                            <p>{{m.msg}}</p>
+                            <span ng-if="m.bot == 1">Боловсруулсан хугацаа: {{m.time * 0.001}} сек.</span>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="chat-input">
+                    <textarea ng-model="msg" class="form-control" placeholder="Зурвас бичих" on-enter="sent()" autofocus="" required></textarea>
+                    <button class="btn" ng-click="sent()"><i class="fa fa-paper-plane-o"></i></button>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <!-- END / CONTENT -->
+        <div class="clearfix"></div>
+        <div ng-if="error">
+            <div class="alert animated fadeInRight">
+                <i class="fa fa-exclamation-triangle"></i> Зурвас бичих талбар хоосон байна !!!
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2017 #UB HACKATHON2017 - Garbage kids
+    </div>
+    <!-- JS -->
+    <script src="/static/lib/angular.min.js"></script>
+    <script src="/static/lib/socket.io.min.js"></script>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/js/app.js"></script>
 </body>
+
 </html>
