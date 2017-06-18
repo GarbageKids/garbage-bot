@@ -74,7 +74,7 @@ node start
 * Nodejs v6.11.0
 
 ### Лиценз
-The MIT License.
+The MIT License.\s\s
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
