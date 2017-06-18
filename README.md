@@ -1,4 +1,5 @@
 # Garbage Bot
+---
 UB HACKATHON 2017, Garbage Kids багийн бүтээл
 
 ## Chatbot хөдөлгүүр
@@ -72,6 +73,10 @@ node start
 * Flask - [суулгах](http://flask.pocoo.org/)
 * Mongo v3.4.5 Community Server
 * Nodejs v6.11.0
+
+### Лиценз
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
 
 
