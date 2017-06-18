@@ -30,7 +30,6 @@ class BayesClassifierCore:
         'бэ': True,
         'юу': True,
         'гэж': True,
-        'хийх': True,
         'үү': True,
         'уу': True,
         'рүү': True,
@@ -50,7 +49,8 @@ class BayesClassifierCore:
         'д': True,
         'т': True,
         'тэй': True,
-        'тай': True
+        'тай': True,
+        'юм': True
     }
 
     @staticmethod
@@ -103,7 +103,7 @@ class BayesClassifierCore:
     def merge_meta_file(document, metafile):
         """
         Файлаас унших үед текст өгөгдлийг харгалзах ангилалтай нь нэгтгэх
-        :param metafile:
+        :param metafile: харгалзах metafile
         :return:
         """
         temp = []
@@ -117,6 +117,10 @@ class BayesClassifierCore:
 
     @staticmethod
     def get_document():
+        """
+        Сургалтын корпусыг уншиж, үгсийн санг бүртгэх
+        :return:
+        """
         if Settings.get_corpus_source_type() == 'FILE':
             for line in FileWorker.corpus_extract_line(Settings.get_file_data()):
                 line = StringWorker.replacer(line)
@@ -145,8 +149,7 @@ class BayesClassifierCore:
                 BayesClassifierCore.documents.append(BayesClassifierCore.documents[e])
 
         featuresets = [({i: (i in word_tokenize(sentence.lower()))
-                        for i in BayesClassifierCore.vocabulary}, tag) for sentence, tag in BayesClassifierCore.documents]
-
+                        for i in BayesClassifierCore.vocabulary}, tag) for sentence, tag in BayesClassifierCore.documents]\
 
         size = int(len(featuresets))
 
@@ -193,8 +196,29 @@ class BayesClassifierCore:
         del temp2
 
         print(words)
-        feature_test = {i: (i in word_tokenize(k)) for k in words for i in BayesClassifierCore.vocabulary}
+        # feature_test = {i: (i in word_tokenize(k)) for k in words for i in BayesClassifierCore.vocabulary}
         # feature_test = {i: (StringWorker.word_similarity(k, i)) for k in words for i in BayesClassifierCore.vocabulary}
+        feature_test = {i: False for i in BayesClassifierCore.vocabulary}
+
+        for k in words:
+            exist = False
+            for i in BayesClassifierCore.vocabulary:
+                if i == k:
+                    exist = True
+                    feature_test.update({i: True})
+                    break
+            if exist is False:
+                temp_str = ""
+                for i in BayesClassifierCore.vocabulary:
+                    mins = 20
+                    sim = StringWorker.word_similarity(i, k)
+                    if mins >= sim:
+                        mins = sim
+                        temp_str = i
+                        exist = True
+                if exist is True:
+                    feature_test.update({temp_str: True})
+
         print(feature_test)
 
         dist = BayesClassifierCore.classifier.prob_classify(feature_test)

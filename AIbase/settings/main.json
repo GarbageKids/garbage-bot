@@ -23,7 +23,6 @@
   },
 
   "receiver": {
-    "url": "http://172.16.234.92/receiver",
     "format": "json",
     "method": "POST"
   },

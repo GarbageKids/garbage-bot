@@ -92,11 +92,12 @@ class StringWorker:
             max = s1len
         else:
             max = s2len
-        if (StringWorker.levenshtein_distance(s1, s2) * 100)/max < 20:
-            print("SIM: ", s1, s2)
-            return True
-        else:
-            return False
+
+        return (StringWorker.levenshtein_distance(s1, s2) * 100) / max
+        # if score < 20:
+        #     return score
+        # else:
+        #     return 100
 
     @staticmethod
     def str_compare(s1, s2):
