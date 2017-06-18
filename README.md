@@ -47,3 +47,35 @@ UB HACKATHON 2017, Garbage Kids багийн бүтээл
 * Python 3.X
 * Natural Language Tool Kit - [суулгах](http://www.nltk.org/install.html)
 * Flask - [суулгах](http://flask.pocoo.org/)
+
+## Chatbot веб апп & Messenger bot
+
+### Ажиллуулах
+#### Тохиргоо
+`chat_app/config/default.json` файлыг нээж тохиргоог тохируулна үүний дараа 
+`
+cd chat_app
+npm install --save
+node start
+`
+
+#### Тохиргоо хийх файл
+```javascript
+  {
+    "messenger_uri": "https://graph.facebook.com/v2.6/me/messages",
+    "app_secret": "FB APP SECRET CODE",
+    "page_access_token": "FB APP Page Access Token",
+    "validation_token": "FB APP /webhook validation string",
+    "ai_url": "AI server url",
+    "port_number": "PORT NUMBER"
+}
+
+```
+
+
+
+
+
+
+
+
