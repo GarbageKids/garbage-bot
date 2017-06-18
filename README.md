@@ -42,22 +42,16 @@ UB HACKATHON 2017, Garbage Kids багийн бүтээл
   }
 }
 ```
-
-### Хамаарал
-* Python 3.X
-* Natural Language Tool Kit - [суулгах](http://www.nltk.org/install.html)
-* Flask - [суулгах](http://flask.pocoo.org/)
-
 ## Chatbot веб апп & Messenger bot
 
 ### Ажиллуулах
 #### Тохиргоо
 `chat_app/config/default.json` файлыг нээж тохиргоог тохируулна үүний дараа 
-`
+```
 cd chat_app
-npm install --save
+npm install --save 
 node start
-`
+```
 
 #### Тохиргоо хийх файл
 ```javascript
@@ -71,6 +65,17 @@ node start
 }
 
 ```
+
+### Хамаарал
+* Python 3.X
+* Natural Language Tool Kit - [суулгах](http://www.nltk.org/install.html)
+* Flask - [суулгах](http://flask.pocoo.org/)
+* Mongo v3.4.5 Community Server
+* Nodejs v6.11.0
+
+
+
+
 
 
 
