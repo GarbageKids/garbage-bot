@@ -1,5 +1,4 @@
 # Garbage Bot
----
 UB HACKATHON 2017, Garbage Kids багийн бүтээл
 
 ## Chatbot хөдөлгүүр
@@ -75,6 +74,7 @@ node start
 * Nodejs v6.11.0
 
 ### Лиценз
+The MIT License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
