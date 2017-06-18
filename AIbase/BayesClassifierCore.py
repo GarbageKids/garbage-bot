@@ -137,7 +137,7 @@ class BayesClassifierCore:
     @staticmethod
     def process():
         """
-        Үсийн хусдаг метход
+        Сургах явц
         :return:
         """
         start_time = time.time()
@@ -218,8 +218,6 @@ class BayesClassifierCore:
                         exist = True
                 if exist is True:
                     feature_test.update({temp_str: True})
-
-        print(feature_test)
 
         dist = BayesClassifierCore.classifier.prob_classify(feature_test)
         temp.update({'BASE': dist.prob("BASE")})
