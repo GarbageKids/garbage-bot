@@ -1,6 +1,9 @@
 # Garbage Bot
 UB HACKATHON 2017, Garbage Kids багийн бүтээл
 
+![alt text][screen]
+[screen]: https://github.com/lupino22/garbage-bot/raw/master/chat_app/public/img/screen_1.png "Chat app demo"
+
 ## Chatbot хөдөлгүүр
 
 ### Ажиллуулах
