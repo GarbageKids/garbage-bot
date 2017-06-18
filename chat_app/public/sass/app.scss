@@ -28,7 +28,6 @@ sans-serif;
 html {
     height: 100%;
     overflow-x: hidden;
-
 }
 
 body {
@@ -40,10 +39,11 @@ body {
 }
 
 .f_right {
-	position: absolute !important;
-	top: 5px;
-	right: 5px;
+    position: absolute !important;
+    top: 5px;
+    right: 5px;
 }
+
 .wrapper {
     background: $success-color;
     position: relative;
@@ -110,13 +110,11 @@ body {
                 &.my {
                     float: right;
                 }
-                
                 span {
                     font-size: 11px;
                     // color: darken(#eee, 10%);
                     color: $primary-color;
                 }
-
             }
         }
         .chat-input {
@@ -182,19 +180,20 @@ body {
 }
 
 .alert {
-	background: $danger-color;
-	position: absolute;
-	bottom: 120px;
-	right: 20px;
-	width: 300px;
-	height: 50px;
-	border-radius: 5px;
-	text-align: center;
-	font-size: 18px;
-	line-height: 50px;
-	box-shadow: 0 5px 10px rgba($primary-color, 0.3);
-	// display: none;
+    background: $danger-color;
+    position: absolute;
+    bottom: 120px;
+    right: 20px;
+    width: 300px;
+    height: 50px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 50px;
+    box-shadow: 0 5px 10px rgba($primary-color, 0.3);
+    // display: none;
 }
+
 .footer {
     background: $primary-color;
     width: 100%;
@@ -206,4 +205,32 @@ body {
     text-align: center;
     line-height: 50px;
     font-family: $dev-font;
+}
+
+.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+}
+
+@keyframes octocat-wave {
+    0%,
+    100% {
+        transform: rotate(0)
+    }
+    20%,
+    60% {
+        transform: rotate(-25deg)
+    }
+    40%,
+    80% {
+        transform: rotate(10deg)
+    }
+}
+
+@media (max-width:500px) {
+    .github-corner:hover .octo-arm {
+        animation: none
+    }
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+    }
 }
