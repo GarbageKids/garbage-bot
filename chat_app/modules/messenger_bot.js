@@ -1,3 +1,4 @@
+// Messenger Bot
 const request = require('request');
 const config = require('config')
 
@@ -13,8 +14,8 @@ const bot = {
         var timeOfMessage = event.timestamp;
         var message = event.message;
 
-        console.log("Received message for user %d and page %d at %d with message:", senderID, recipientID, timeOfMessage);
-        console.log(JSON.stringify(message));
+        // console.log("Received message for user %d and page %d at %d with message:", senderID, recipientID, timeOfMessage);
+        // console.log(JSON.stringify(message));
 
         var isEcho = message.is_echo;
         var messageId = message.mid;
@@ -26,17 +27,6 @@ const bot = {
         var messageAttachments = message.attachments;
         var quickReply = message.quick_reply;
 
-        if (isEcho) {
-            // Just logging message echoes to console
-            console.log("Received echo for message %s and app %d with metadata %s", messageId, appId, metadata);
-            return;
-        } else if (quickReply) {
-            var quickReplyPayload = quickReply.payload;
-            console.log("Quick reply for message %s with payload %s", messageId, quickReplyPayload);
-            this.sendTextMessage(senderID, "Quick reply tapped");
-            return;
-        }
-
         if (messageText) {
             switch (messageText) {
                 case 'sms':
@@ -44,7 +34,24 @@ const bot = {
                     break;
 
                 default:
-                    this.sendButtonMessage(senderID);
+                    request.post({
+                        url: config.get('ai_url'),
+                        headers: {
+                            "content-type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            message: {
+                                type: 'text',
+                                content: messageText === '' ? 'Ямар үйлдлийн': messageText
+                            }
+                        })
+
+                    }, function(err, httpResponse, body) {
+                        if (err) console.log(err);
+                        body = JSON.parse(body);
+                        bot.sendTextMessage(senderID, body['message']['content']);
+
+                    });
             }
         } else if (messageAttachments) {
             this.sendTextMessage(senderID, "Message with attachment received");

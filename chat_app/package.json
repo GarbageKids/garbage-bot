@@ -1,12 +1,12 @@
 {
   "name": "chat_app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Chat bot & Messenger bot",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
-  "author": "",
+  "author": "Galt Davaa",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.1",
@@ -19,5 +19,10 @@
     "mongoose": "^4.10.6",
     "request": "^2.81.0",
     "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.12",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0"
   }
 }

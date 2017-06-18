@@ -5,7 +5,7 @@ const stream = csv(['id', 'q', 'a'])
 const db = require('./db.js')
 
 // Clear db
-db.removeAll()
+// db.removeAll()
 
 // Add data functions
 function addDataBase(url) {
@@ -84,7 +84,7 @@ function addDataScm(url) {
     })
 }
 
-addDataBase('./data/base.csv')
+// addDataBase('./data/base.csv')
 // addDataContra('./data/contract.csv')
 // addDataCrm('./data/crm.csv')
 // addDataFinance('./data/finance.csv')
